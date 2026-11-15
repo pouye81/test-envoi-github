@@ -1,0 +1,363 @@
+openapi: 3.0.3
+info:
+  title: "test-envoi-github : API"
+  version: "0.1.0"
+  description: "Contrat d'API généré par LONKOO à partir du canvas. Les opérations qui répondent 501 sont à implémenter."
+servers:
+  - url: http://localhost:8080
+    description: Développement local
+paths:
+  "/patients":
+    get:
+      operationId: "getPatients"
+      summary: "Lister les patients"
+      tags: ["api_clinique"]
+      responses:
+        "200":
+          description: "Liste"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Patient"
+    post:
+      operationId: "postPatients"
+      summary: "Enregistrer un patient"
+      tags: ["api_clinique"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Patient"
+      responses:
+        "201":
+          description: "Créé"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Patient"
+        "400":
+          description: "Données invalides : un champ obligatoire manque ou est vide"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                  champs:
+                    type: object
+                    additionalProperties:
+                      type: string
+        "409":
+          description: "Valeur déjà utilisée ou contrainte de la base non respectée"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+  "/medecins":
+    get:
+      operationId: "getMedecins"
+      summary: "Lister les médecins"
+      tags: ["api_clinique"]
+      responses:
+        "200":
+          description: "Liste"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Medecin"
+    post:
+      operationId: "postMedecins"
+      summary: "Ajouter un médecin"
+      tags: ["api_clinique"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Medecin"
+      responses:
+        "201":
+          description: "Créé"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Medecin"
+        "400":
+          description: "Données invalides : un champ obligatoire manque ou est vide"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                  champs:
+                    type: object
+                    additionalProperties:
+                      type: string
+        "409":
+          description: "Valeur déjà utilisée ou contrainte de la base non respectée"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+  "/rendez-vous":
+    get:
+      operationId: "getRendezVous"
+      summary: "Lister les rendez-vous"
+      tags: ["api_clinique"]
+      responses:
+        "200":
+          description: "Liste"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RendezVous"
+    post:
+      operationId: "postRendezVous"
+      summary: "Prendre un rendez-vous"
+      tags: ["api_clinique"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RendezVous"
+      responses:
+        "201":
+          description: "Créé"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RendezVous"
+        "400":
+          description: "Données invalides : un champ obligatoire manque ou est vide"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                  champs:
+                    type: object
+                    additionalProperties:
+                      type: string
+        "409":
+          description: "Valeur déjà utilisée ou contrainte de la base non respectée"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+  "/consultations":
+    get:
+      operationId: "getConsultations"
+      summary: "Lister les consultations"
+      tags: ["api_clinique"]
+      responses:
+        "200":
+          description: "Liste"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Consultation"
+    post:
+      operationId: "postConsultations"
+      summary: "Enregistrer une consultation"
+      tags: ["api_clinique"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Consultation"
+      responses:
+        "201":
+          description: "Créé"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Consultation"
+        "400":
+          description: "Données invalides : un champ obligatoire manque ou est vide"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                  champs:
+                    type: object
+                    additionalProperties:
+                      type: string
+        "409":
+          description: "Valeur déjà utilisée ou contrainte de la base non respectée"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+  "/factures":
+    get:
+      operationId: "getFactures"
+      summary: "Lister les factures"
+      tags: ["api_clinique"]
+      responses:
+        "200":
+          description: "Liste"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Facture"
+    post:
+      operationId: "postFactures"
+      summary: "Établir la facture d'une consultation"
+      tags: ["api_clinique"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Facture"
+      responses:
+        "201":
+          description: "Créé"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Facture"
+        "400":
+          description: "Données invalides : un champ obligatoire manque ou est vide"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                  champs:
+                    type: object
+                    additionalProperties:
+                      type: string
+        "409":
+          description: "Valeur déjà utilisée ou contrainte de la base non respectée"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+components:
+  schemas:
+    "Patient":
+      type: object
+      required: ["numeroDossier", "nom", "telephone"]
+      properties:
+        "id":
+          type: string
+          format: uuid
+          readOnly: true
+        "numeroDossier":
+          type: string
+        "nom":
+          type: string
+        "telephone":
+          type: string
+        "naissance":
+          type: string
+          format: date
+        "adresse":
+          type: string
+    "Medecin":
+      type: object
+      required: ["nom", "specialite"]
+      properties:
+        "id":
+          type: string
+          format: uuid
+          readOnly: true
+        "nom":
+          type: string
+        "specialite":
+          type: string
+    "RendezVous":
+      type: object
+      required: ["patientId", "medecinId", "debut", "fin", "statut"]
+      properties:
+        "id":
+          type: string
+          format: uuid
+          readOnly: true
+        "patientId":
+          type: string
+          format: uuid
+        "medecinId":
+          type: string
+          format: uuid
+        "debut":
+          type: string
+          format: date-time
+        "fin":
+          type: string
+          format: date-time
+        "motif":
+          type: string
+        "statut":
+          type: string
+    "Consultation":
+      type: object
+      required: ["rendezVousId"]
+      properties:
+        "id":
+          type: string
+          format: uuid
+          readOnly: true
+        "rendezVousId":
+          type: string
+          format: uuid
+        "compteRendu":
+          type: string
+    "Facture":
+      type: object
+      required: ["consultationId", "montant"]
+      properties:
+        "id":
+          type: string
+          format: uuid
+          readOnly: true
+        "consultationId":
+          type: string
+          format: uuid
+        "montant":
+          type: integer
+          format: int64
+        "referencePaiement":
+          type: string
+        "payeLe":
+          type: string
+          format: date-time

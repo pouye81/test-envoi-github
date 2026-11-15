@@ -1,0 +1,282 @@
+{
+  "meta" : {
+    "name" : "Clinique : rendez-vous et rappels par SMS",
+    "description" : "Exemple de démonstration : prise de rendez-vous, dossiers des patients, rappels par SMS et paiement des consultations par paiement mobile."
+  },
+  "edges" : [ {
+    "id" : "e1",
+    "kind" : "http",
+    "label" : "appelle l'API",
+    "source" : "n1",
+    "target" : "n3"
+  }, {
+    "id" : "e2",
+    "kind" : "auth",
+    "source" : "n1",
+    "target" : "n2"
+  }, {
+    "id" : "e3",
+    "kind" : "data",
+    "source" : "n3",
+    "target" : "n4"
+  }, {
+    "id" : "e4",
+    "kind" : "event",
+    "label" : "rendez-vous créé",
+    "source" : "n3",
+    "target" : "n5"
+  }, {
+    "id" : "e5",
+    "kind" : "event",
+    "label" : "envoie le rappel",
+    "source" : "n5",
+    "target" : "n6"
+  }, {
+    "id" : "e6",
+    "kind" : "http",
+    "label" : "demande un paiement",
+    "source" : "n3",
+    "target" : "n7"
+  }, {
+    "id" : "e7",
+    "kind" : "event",
+    "label" : "paiement reçu",
+    "source" : "n7",
+    "target" : "n8"
+  } ],
+  "nodes" : [ {
+    "id" : "n1",
+    "data" : {
+      "name" : "portail_clinique",
+      "label" : "Portail clinique",
+      "pages" : [ "accueil", "rendez_vous", "dossiers" ]
+    },
+    "type" : "webapp",
+    "position" : {
+      "x" : 0,
+      "y" : 160
+    }
+  }, {
+    "id" : "n2",
+    "data" : {
+      "name" : "connexion",
+      "label" : "Connexion",
+      "method" : "otp-sms"
+    },
+    "type" : "auth",
+    "position" : {
+      "x" : 260,
+      "y" : 0
+    }
+  }, {
+    "id" : "n3",
+    "data" : {
+      "name" : "api_clinique",
+      "label" : "API clinique",
+      "endpoints" : [ {
+        "path" : "/patients",
+        "method" : "GET",
+        "summary" : "Lister les patients"
+      }, {
+        "path" : "/patients",
+        "method" : "POST",
+        "summary" : "Enregistrer un patient"
+      }, {
+        "path" : "/medecins",
+        "method" : "GET",
+        "summary" : "Lister les médecins"
+      }, {
+        "path" : "/medecins",
+        "method" : "POST",
+        "summary" : "Ajouter un médecin"
+      }, {
+        "path" : "/rendez-vous",
+        "method" : "GET",
+        "summary" : "Lister les rendez-vous"
+      }, {
+        "path" : "/rendez-vous",
+        "method" : "POST",
+        "summary" : "Prendre un rendez-vous"
+      }, {
+        "path" : "/consultations",
+        "method" : "GET",
+        "summary" : "Lister les consultations"
+      }, {
+        "path" : "/consultations",
+        "method" : "POST",
+        "summary" : "Enregistrer une consultation"
+      }, {
+        "path" : "/factures",
+        "method" : "GET",
+        "summary" : "Lister les factures"
+      }, {
+        "path" : "/factures",
+        "method" : "POST",
+        "summary" : "Établir la facture d'une consultation"
+      } ]
+    },
+    "type" : "service",
+    "position" : {
+      "x" : 260,
+      "y" : 280
+    }
+  }, {
+    "id" : "n4",
+    "data" : {
+      "name" : "clinique_db",
+      "label" : "Base clinique",
+      "engine" : "postgresql",
+      "entities" : [ {
+        "name" : "patient",
+        "fields" : [ {
+          "name" : "numero_dossier",
+          "type" : "string",
+          "unique" : true,
+          "required" : true
+        }, {
+          "name" : "nom",
+          "type" : "string",
+          "required" : true
+        }, {
+          "name" : "telephone",
+          "type" : "string",
+          "required" : true
+        }, {
+          "name" : "naissance",
+          "type" : "date"
+        }, {
+          "name" : "adresse",
+          "type" : "string"
+        } ]
+      }, {
+        "name" : "medecin",
+        "fields" : [ {
+          "name" : "nom",
+          "type" : "string",
+          "required" : true
+        }, {
+          "name" : "specialite",
+          "type" : "string",
+          "required" : true
+        } ]
+      }, {
+        "name" : "rendez_vous",
+        "fields" : [ {
+          "name" : "patient_id",
+          "type" : "uuid",
+          "required" : true
+        }, {
+          "name" : "medecin_id",
+          "type" : "uuid",
+          "required" : true
+        }, {
+          "name" : "debut",
+          "type" : "datetime",
+          "required" : true
+        }, {
+          "name" : "fin",
+          "type" : "datetime",
+          "required" : true
+        }, {
+          "name" : "motif",
+          "type" : "string"
+        }, {
+          "name" : "statut",
+          "type" : "string",
+          "required" : true
+        } ]
+      }, {
+        "name" : "consultation",
+        "fields" : [ {
+          "name" : "rendez_vous_id",
+          "type" : "uuid",
+          "required" : true
+        }, {
+          "name" : "compte_rendu",
+          "type" : "text"
+        } ]
+      }, {
+        "name" : "facture",
+        "fields" : [ {
+          "name" : "consultation_id",
+          "type" : "uuid",
+          "required" : true
+        }, {
+          "name" : "montant",
+          "type" : "long",
+          "required" : true
+        }, {
+          "name" : "reference_paiement",
+          "type" : "string",
+          "unique" : true
+        }, {
+          "name" : "paye_le",
+          "type" : "datetime"
+        } ]
+      } ]
+    },
+    "type" : "database",
+    "position" : {
+      "x" : 540,
+      "y" : 280
+    }
+  }, {
+    "id" : "n5",
+    "data" : {
+      "name" : "file_rappels",
+      "label" : "File des rappels",
+      "topics" : [ "rendez_vous_crees", "rappels_a_envoyer" ]
+    },
+    "type" : "queue",
+    "position" : {
+      "x" : 540,
+      "y" : 80
+    }
+  }, {
+    "id" : "n6",
+    "data" : {
+      "name" : "rappels_sms",
+      "label" : "Rappels par SMS",
+      "channel" : "sms",
+      "templates" : [ {
+        "name" : "rappel_rdv",
+        "text" : "Rappel : vous avez un rendez-vous demain à la clinique."
+      }, {
+        "name" : "annulation_rdv",
+        "text" : "Votre rendez-vous a été annulé. Contactez la clinique pour en fixer un autre."
+      } ]
+    },
+    "type" : "messaging",
+    "position" : {
+      "x" : 800,
+      "y" : 80
+    }
+  }, {
+    "id" : "n7",
+    "data" : {
+      "flow" : "collect",
+      "name" : "paiement_consultation",
+      "label" : "Paiement soins",
+      "currency" : "XOF"
+    },
+    "type" : "mobile-payment",
+    "position" : {
+      "x" : 540,
+      "y" : 460
+    }
+  }, {
+    "id" : "n8",
+    "data" : {
+      "name" : "facturation",
+      "label" : "Facturation",
+      "model" : "one-time",
+      "currency" : "XOF"
+    },
+    "type" : "billing",
+    "position" : {
+      "x" : 800,
+      "y" : 460
+    }
+  } ],
+  "schemaVersion" : 1
+}
